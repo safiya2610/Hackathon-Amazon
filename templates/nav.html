@@ -1,268 +1,119 @@
 {% load static %}
 {% load cart_template_tags %}
 {% load category_template_tags %}
-
 <style>
-	.topbar {
-		background-color: white;
-		color: black !important;
-	}
-	.topbar a:hover{
-		color: black;
-	}
+    .amz-nav-main {
+        background-color: #131921;
+        color: white;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .amz-nav-main a {
+        color: white;
+        text-decoration: none;
+    }
+    .amz-nav-main .logo {
+        font-size: 24px;
+        font-weight: bold;
+        margin-right: 20px;
+    }
+    .amz-search {
+        flex-grow: 1;
+        margin: 0 20px;
+        display: flex;
+    }
+    .amz-search input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 4px 0 0 4px;
+        border: none;
+        color: black;
+    }
+    .amz-search button {
+        background-color: #febd69;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 0 4px 4px 0;
+        cursor: pointer;
+        color: black;
+    }
+    .amz-search button:hover {
+        background-color: #f3a847;
+    }
+    .amz-nav-tools {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .amz-nav-tools a:hover {
+        text-decoration: underline;
+    }
+    .amz-nav-sub {
+        background-color: #232f3e;
+        color: white;
+        padding: 5px 20px;
+        display: flex;
+        gap: 15px;
+        font-size: 14px;
+    }
+    .amz-nav-sub a {
+        color: white;
+        text-decoration: none;
+        padding: 5px;
+    }
+    .amz-nav-sub a:hover {
+        border: 1px solid white;
+        border-radius: 2px;
+    }
+    
+    @media (max-width: 768px) {
+        .amz-nav-main {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .amz-search {
+            margin: 0;
+            width: 100%;
+        }
+    }
 </style>
-<!-- Header -->
-<header class="header1">
-		<!-- Header desktop -->
-		<div class="container-menu-header">
-			<div class="topbar">
-				<div class="topbar-social">
-					<a href="#" class="topbar-social-item fab fa-facebook"></a>
-					<a href="#" class="topbar-social-item fab fa-instagram"></a>
-					<a href="#" class="topbar-social-item fab fa-pinterest-p"></a>
-					<a href="#" class="topbar-social-item fab fa-twitter"></a>
-					<a href="#" class="topbar-social-item fab fa-youtube"></a>
-				</div>
 
-				<span class="topbar-child1">
-					Free shipping for standard order over $100
-				</span>
+<header>
+    <div class="amz-nav-main">
+        <a href="/" class="logo">amazon<span style="color:#ff9900; font-size:20px;">.recommerce</span></a>
+        
+        <form class="amz-search" method="GET" action="{% url 'core:shop' %}">
+            <input type="text" name="q" placeholder="Search for products, brands and more">
+            <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
 
-				<div class="topbar-child2">
-					<span class="topbar-email">
-						<a href="https://github.com/zinmyoswe">
-						overmidnight12@gmail.com
-					    </a>
-					</span>
+        <div class="amz-nav-tools">
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'core:buyer-dashboard' %}" style="display:flex; flex-direction:column; font-size:12px;">
+                    <span>Hello, {{ request.user.username }}</span>
+                    <span style="font-weight:bold; font-size:14px;">Account & Lists</span>
+                </a>
+                <a href="{% url 'core:seller-dashboard' %}" style="font-weight:bold; font-size:14px;">Seller Center</a>
+                <a href="{% url 'core:order-summary' %}" style="display:flex; align-items:center; gap:5px; font-weight:bold; font-size:16px;">
+                    <i class="fa fa-shopping-cart" style="font-size: 24px; color:#f08804;"></i>
+                    <span style="color:#f08804;">{{ request.user|cart_item_count }}</span> Cart
+                </a>
+                <a href="{% url 'account_logout' %}" style="font-size:12px; margin-left:10px;">Sign Out</a>
+            {% else %}
+                <a href="{% url 'account_login' %}" style="display:flex; flex-direction:column; font-size:12px;">
+                    <span>Hello, sign in</span>
+                    <span style="font-weight:bold; font-size:14px;">Account & Lists</span>
+                </a>
+            {% endif %}
+        </div>
+    </div>
 
-					<div class="topbar-language rs1-select2">
-						<select class="selection-1" name="time">
-							<option>USD</option>
-							<option>EUR</option>
-						</select>
-					</div>
-				</div>
-			</div>
-
-			<div class="wrap_header">
-				<!-- Logo -->
-				<a href="/" class="logo">
-					<p style="color: black; "><b style="font-size: 22px;">D</b>JANGO SHOP</p>
-				</a>
-
-				<!-- Menu -->
-				<div class="wrap_menu">
-					<nav class="menu">
-						<ul class="main_menu">
-							<li>
-								<a href="/">Home</a>
-
-							</li>
-
-							<li>
-								<a href="/shop/">Shop</a>
-							</li>
-
-							{% categories %}
-
-							{% if request.user.is_authenticated %}
-							<li>
-								<div class="header-wrapicon2">
-								<a href="{% url 'core:order-summary' %}">
-									
-									<img src="{% static 'images/icons/icon-header-02.png' %}" class="header-icon1 js-show-header-dropdown" alt="ICON">
-						<span class="header-icons-noti">{{ request.user|cart_item_count }}</span>
-									</a>
-								</div>
-							</li>
-							<li>
-								<a href="{% url 'account_logout' %}">Logout</a>
-							</li>
-							{% else %}
-							<li>
-								<a href="#">Login</a>
-								<ul class="sub_menu">
-									<li><a href="{% url 'account_login' %}">Login</a></li>
-									<li><a href="{% url 'account_signup' %}">SignUp</a></li>
-								</ul>
-							</li>
-							{% endif %}
-						</ul>
-					</nav>
-				</div>
-
-				
-			</div>
-		</div>
-
-		<!-- Header Mobile -->
-		<div class="wrap_header_mobile">
-			<!-- Logo moblie -->
-			<a href="index.html" class="logo-mobile">
-				<img src="{% static 'images/icons/logo.png' %}" alt="IMG-LOGO">
-			</a>
-
-			<!-- Button show menu -->
-			<div class="btn-show-menu">
-				<!-- Header Icon mobile -->
-				<div class="header-icons-mobile">
-					<a href="#" class="header-wrapicon1 dis-block">
-						<img src="{% static 'images/icons/icon-header-01.png' %}" class="header-icon1" alt="ICON">
-					</a>
-
-					<span class="linedivide2"></span>
-
-					<div class="header-wrapicon2">
-						<img src="{% static 'images/icons/icon-header-02.png' %}" class="header-icon1 js-show-header-dropdown" alt="ICON">
-						<span class="header-icons-noti">0</span>
-
-						<!-- Header cart noti -->
-						<div class="header-cart header-dropdown">
-							<ul class="header-cart-wrapitem">
-								<li class="header-cart-item">
-									<div class="header-cart-item-img">
-										<img src="{% static 'images/item-cart-01.jpg' %}" alt="IMG">
-									</div>
-
-									<div class="header-cart-item-txt">
-										<a href="#" class="header-cart-item-name">
-											White Shirt With Pleat Detail Back
-										</a>
-
-										<span class="header-cart-item-info">
-											1 x $19.00
-										</span>
-									</div>
-								</li>
-
-								<li class="header-cart-item">
-									<div class="header-cart-item-img">
-										<img src="{% static 'images/item-cart-02.jpg' %}" alt="IMG">
-									</div>
-
-									<div class="header-cart-item-txt">
-										<a href="#" class="header-cart-item-name">
-											Converse All Star Hi Black Canvas
-										</a>
-
-										<span class="header-cart-item-info">
-											1 x $39.00
-										</span>
-									</div>
-								</li>
-
-								<li class="header-cart-item">
-									<div class="header-cart-item-img">
-										<img src="{% static 'images/item-cart-03.jpg' %}" alt="IMG">
-									</div>
-
-									<div class="header-cart-item-txt">
-										<a href="#" class="header-cart-item-name">
-											Nixon Porter Leather Watch In Tan
-										</a>
-
-										<span class="header-cart-item-info">
-											1 x $17.00
-										</span>
-									</div>
-								</li>
-							</ul>
-
-							<div class="header-cart-total">
-								Total: $75.00
-							</div>
-
-							<div class="header-cart-buttons">
-								<div class="header-cart-wrapbtn">
-									<!-- Button -->
-									<a href="cart.html" class="flex-c-m size1 bg1 bo-rad-20 hov1 s-text1 trans-0-4">
-										View Cart
-									</a>
-								</div>
-
-								<div class="header-cart-wrapbtn">
-									<!-- Button -->
-									<a href="#" class="flex-c-m size1 bg1 bo-rad-20 hov1 s-text1 trans-0-4">
-										Check Out
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="btn-show-menu-mobile hamburger hamburger--squeeze">
-					<span class="hamburger-box">
-						<span class="hamburger-inner"></span>
-					</span>
-				</div>
-			</div>
-		</div>
-
-		<!-- Menu Mobile -->
-		<div class="wrap-side-menu" >
-			<nav class="side-menu">
-				<ul class="main-menu">
-					<li class="item-topbar-mobile p-l-20 p-t-8 p-b-8">
-						<span class="topbar-child1">
-							Free shipping for standard order over $100
-						</span>
-					</li>
-
-					<li class="item-topbar-mobile p-l-20 p-t-8 p-b-8">
-						<div class="topbar-child2-mobile">
-							<span class="topbar-email">
-								fashe@example.com
-							</span>
-
-							<div class="topbar-language rs1-select2">
-								<select class="selection-1" name="time">
-									<option>USD</option>
-									<option>EUR</option>
-								</select>
-							</div>
-						</div>
-					</li>
-
-					<li class="item-topbar-mobile p-l-10">
-						<div class="topbar-social-mobile">
-							<a href="#" class="topbar-social-item fa fa-facebook"></a>
-							<a href="#" class="topbar-social-item fa fa-instagram"></a>
-							<a href="#" class="topbar-social-item fa fa-pinterest-p"></a>
-							<a href="#" class="topbar-social-item fa fa-snapchat-ghost"></a>
-							<a href="#" class="topbar-social-item fa fa-youtube-play"></a>
-						</div>
-					</li>
-
-					<li class="item-menu-mobile">
-						<a href="/">Home</a>
-					</li>
-
-					<li class="item-menu-mobile">
-						<a href="/shop">Shop</a>
-					</li>
-
-					{% categories_mobile %}
-
-					{% if request.user.is_authenticated %}
-					<li class="item-menu-mobile">
-						<a href="{% url 'core:order-summary' %}">Cart<span class="badge badge-dark">{{ request.user|cart_item_count }}</span></a>
-					</li>
-					<li class="item-menu-mobile">
-						<a href="{% url 'account_logout' %}">Logout</a>
-					</li>
-					{% else %}
-					<li class="item-menu-mobile">
-						<a href="#">Login</a>
-						<ul class="sub-menu">
-							<li><a href="{% url 'account_login' %}">Login</a></li>
-							<li><a href="{% url 'account_signup' %}">SignUp</a></li>
-						</ul>
-						<i class="arrow-main-menu fa fa-angle-right" aria-hidden="true"></i>
-					</li>
-					{% endif %}
-
-				</ul>
-			</nav>
-		</div>
-	</header>
+    <div class="amz-nav-sub">
+        <a href="{% url 'core:shop' %}"><i class="fa fa-bars"></i> All Products</a>
+        <a href="{% url 'core:donations' %}">Donation Center</a>
+        <a href="{% url 'core:nearby-products' %}">Nearby Local Deals</a>
+    </div>
+</header>

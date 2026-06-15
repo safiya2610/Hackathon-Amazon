@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<style>
+    .amz-upload-container {
+        max-width: 600px;
+        margin: 40px auto;
+        background: white;
+        padding: 30px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+    .amz-upload-container h2 {
+        font-size: 28px;
+        font-weight: 400;
+        margin-bottom: 5px;
+    }
+    .amz-upload-container p {
+        font-size: 14px;
+        color: #565959;
+        margin-bottom: 20px;
+    }
+    .amz-upload-container .form-control {
+        border-radius: 4px;
+        border: 1px solid #888c8c;
+        padding: 10px;
+        margin-bottom: 15px;
+        width: 100%;
+    }
+</style>
+
+<div class="container-fluid" style="background:#eaeded; padding:20px 0;">
+    <div class="amz-upload-container">
+        <h2>Sell an Item Locally</h2>
+        <p>Post your item so people nearby can buy it instantly with $0 delivery.</p>
+        
+        <form method="POST" enctype="multipart/form-data" action="{% url 'core:upload-nearby-product' %}">
+            {% csrf_token %}
+            
+            <label style="font-weight:bold; font-size:14px;">Title</label>
+            {{ form.title }}
+            
+            <label style="font-weight:bold; font-size:14px;">Price ($)</label>
+            {{ form.price }}
+            
+            <label style="font-weight:bold; font-size:14px;">Location</label>
+            {{ form.location }}
+            
+            <label style="font-weight:bold; font-size:14px;">Description</label>
+            {{ form.description }}
+            
+            <label style="font-weight:bold; font-size:14px;">Product Image</label>
+            <div style="margin-bottom:20px;">
+                {{ form.image }}
+            </div>
+            
+            <button type="submit" class="amz-btn-yellow" style="width:100%; padding:10px 0; font-size:16px;">List Item Locally</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

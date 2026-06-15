@@ -19,3 +19,5 @@ media_root/
 __pycache__/
 *.pyc
 db.sqlite3
+*.log
+yolov8s-world.pt

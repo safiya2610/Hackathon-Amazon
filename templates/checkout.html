@@ -56,6 +56,16 @@
       <form method="POST" class="needs-validation" novalidate>
       	{% csrf_token %}
         <div class="mb-3">
+          <label for="phone_number">Phone Number</label>
+          {{ form.phone_number }}
+        </div>
+        
+        <div class="mb-3">
+          <label for="location">Location</label>
+          {{ form.location }}
+        </div>
+
+        <div class="mb-3">
           <label for="address">Address</label>
           {{ form.street_address }}
         </div>

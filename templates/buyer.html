@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container bgwhite p-t-35 p-b-80">
+  <div class="p-b-20">
+    <h3 class="m-text5">Buyer Dashboard</h3>
+    <p class="s-text8">Your used-item purchases and points.</p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="bgwhite" style="border:1px solid #eee; padding:15px; border-radius:6px;">
+        <h5 class="m-text19 p-b-10">Your Points</h5>
+        <div class="s-text8">Green points: <b style="color:green;">{{ user_points }}</b></div>
+        <div class="s-text8 p-t-5">Total purchases: <b>{{ purchases_count }}</b></div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="bgwhite" style="border:1px solid #eee; padding:15px; border-radius:6px;">
+        <h5 class="m-text19 p-b-10">Recent Purchases</h5>
+        {% if recent_purchases %}
+          <ul class="s-text8">
+            {% for p in recent_purchases %}
+              <li>
+                {{ p.listing.item.title }} ({{ p.listing.condition }}) - ${{ p.sold_price }} - +{{ p.points_awarded }} pts
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="s-text8">No purchases yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="p-b-20" style="margin-top:20px;">
+    <h5 class="m-text19 p-b-10">All Purchases</h5>
+
+    {% if purchases %}
+      <div class="row">
+        {% for p in purchases %}
+          <div class="col-md-6 p-b-15">
+            <div class="bgwhite" style="border:1px solid #eee; padding:15px; border-radius:6px;">
+              <div class="s-text8"><b>{{ p.listing.item.title }}</b></div>
+              <div class="s-text8">Condition: <b>{{ p.listing.condition }}</b></div>
+              <div class="s-text8">Sold price: <b>${{ p.sold_price }}</b></div>
+              <div class="s-text8">Points awarded: <b>+{{ p.points_awarded }}</b></div>
+              <div class="s-text8">Purchased at: <b>{{ p.purchased_at }}</b></div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="s-text8">No purchases yet.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock content %}
+

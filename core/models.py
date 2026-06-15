@@ -51,6 +51,7 @@ class Category(models.Model):
 
 
 class Item(models.Model):
+
     title = models.CharField(max_length=100)
     price = models.FloatField()
     discount_price = models.FloatField(blank=True, null=True)
@@ -62,6 +63,8 @@ class Item(models.Model):
     description_long = models.TextField()
     image = models.ImageField()
     is_active = models.BooleanField(default=True)
+    size_recommendation = models.CharField(max_length=255, blank=True, null=True)
+
 
     def __str__(self):
         return self.title
@@ -87,21 +90,32 @@ class OrderItem(models.Model):
                              on_delete=models.CASCADE)
     ordered = models.BooleanField(default=False)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    used_item_listing = models.ForeignKey('UsedItemListing', on_delete=models.SET_NULL, blank=True, null=True)
     quantity = models.IntegerField(default=1)
 
     def __str__(self):
+        if self.used_item_listing:
+            return f"{self.quantity} of {self.item.title} (Used - {self.used_item_listing.condition})"
         return f"{self.quantity} of {self.item.title}"
 
     def get_total_item_price(self):
+        if self.used_item_listing:
+            return self.quantity * self.used_item_listing.price
         return self.quantity * self.item.price
 
     def get_total_discount_item_price(self):
+        if self.used_item_listing:
+            return self.quantity * self.used_item_listing.price
         return self.quantity * self.item.discount_price
 
     def get_amount_saved(self):
+        if self.used_item_listing:
+            return 0
         return self.get_total_item_price() - self.get_total_discount_item_price()
 
     def get_final_price(self):
+        if self.used_item_listing:
+            return self.get_total_item_price()
         if self.item.discount_price:
             return self.get_total_discount_item_price()
         return self.get_total_item_price()
@@ -159,9 +173,21 @@ class BillingAddress(models.Model):
     zip = models.CharField(max_length=100)
     address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES)
     default = models.BooleanField(default=False)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    location = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.user.username
+
+class ProductReview(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviews')
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Review by {self.user.username} on {self.item.title}"
+
 
     class Meta:
         verbose_name_plural = 'BillingAddresses'
@@ -194,3 +220,82 @@ class Refund(models.Model):
 
     def __str__(self):
         return f"{self.pk}"
+
+
+USED_CONDITION_CHOICES = (
+    ('used', 'Used'),
+    ('unused', 'Unused'),
+)
+
+
+class UserPoints(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='points_balance')
+    points = models.IntegerField(default=0)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username}: {self.points}" 
+
+
+class UsedItemListing(models.Model):
+    seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sold_listings')
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='used_listings')
+    condition = models.CharField(max_length=10, choices=USED_CONDITION_CHOICES)
+    price = models.FloatField()
+    image = models.ImageField(upload_to='used_item_listings/', blank=True, null=True)
+    video = models.FileField(upload_to='used_item_videos/', blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    suggest_donation = models.BooleanField(default=False)
+    donation_reason = models.CharField(max_length=255, blank=True, null=True)
+    is_donation = models.BooleanField(default=False)
+    description = models.TextField(blank=True, null=True)
+    yolo_tags = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return f"{self.item.title} ({self.condition}) - {self.price}" 
+
+
+class UsedItemPurchase(models.Model):
+    buyer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='used_purchases')
+    listing = models.ForeignKey(UsedItemListing, on_delete=models.CASCADE, related_name='purchases')
+    sold_price = models.FloatField()
+    points_awarded = models.IntegerField()
+    purchased_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.buyer.username} bought {self.listing}"
+
+
+class UsedItemCartItem(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='used_cart_items')
+    listing = models.ForeignKey(UsedItemListing, on_delete=models.CASCADE, related_name='cart_items')
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'listing')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.listing}"
+
+class LocalResellItem(models.Model):
+    seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='local_resell_items')
+    title = models.CharField(max_length=150)
+    price = models.FloatField()
+    image = models.ImageField(upload_to='local_resell/', blank=True, null=True)
+    location = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    is_sold = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} in {self.location}"
+
+class LocalResellOrder(models.Model):
+    buyer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='local_purchases')
+    item = models.ForeignKey(LocalResellItem, on_delete=models.CASCADE, related_name='orders')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Order: {self.item.title} by {self.buyer.username}"

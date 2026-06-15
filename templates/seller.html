@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container bgwhite p-t-35 p-b-80">
+  <div class="p-b-20">
+    <h3 class="m-text5">Seller Dashboard</h3>
+    <p class="s-text8">Your used-item listings, sold status, and sell forms.</p>
+  </div>
+
+  <div class="row">
+    <!-- Left Column: Sell Form -->
+    <div class="col-lg-4 col-md-5 p-b-30">
+      <div class="bgwhite" style="border:1px solid #eee; padding:20px; border-radius:6px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+        <h5 class="m-text19 p-b-15" style="border-bottom: 1px solid #eee; padding-bottom: 10px;">Sell Used/Unused Item</h5>
+        {% if sell_form %}
+          <form method="post" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group" style="margin-bottom: 15px;">
+              <label class="s-text8" style="font-weight: 600; display: block; margin-bottom: 5px;">Product/Item</label>
+              {{ sell_form.item }}
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+              <label class="s-text8" style="font-weight: 600; display: block; margin-bottom: 5px;">Condition</label>
+              {{ sell_form.condition }}
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+              <label class="s-text8" style="font-weight: 600; display: block; margin-bottom: 5px;">Your Price ($)</label>
+              {{ sell_form.price }}
+              <small class="form-text text-muted" style="font-size: 11px; margin-top: 4px;">Price must be less than the original item price.</small>
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+              <label class="s-text8" style="font-weight: 600; display: block; margin-bottom: 5px;">Upload Image</label>
+              {{ sell_form.image }}
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+              <label class="s-text8" style="font-weight: 600; display: block; margin-bottom: 5px;">Upload Video (Optional)</label>
+              {{ sell_form.video }}
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" style="margin-top:15px; font-weight: 600;">Submit Listing</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Right Column: Stats and Listings -->
+    <div class="col-lg-8 col-md-7">
+      <div class="row">
+        <div class="col-md-6 p-b-15">
+          <div class="bgwhite" style="border:1px solid #eee; padding:15px; border-radius:6px; height: 100%;">
+            <h5 class="m-text19 p-b-10">Your Listings</h5>
+            <div class="s-text8">Active listings: <b>{{ active_listings_count }}</b></div>
+            <div class="s-text8 p-t-5">Inactive listings (sold): <b>{{ sold_listings_count }}</b></div>
+            <div class="s-text8 p-t-5">Total listings: <b>{{ total_listings_count }}</b></div>
+          </div>
+        </div>
+
+        <div class="col-md-6 p-b-15">
+          <div class="bgwhite" style="border:1px solid #eee; padding:15px; border-radius:6px; height: 100%;">
+            <h5 class="m-text19 p-b-10">Recently Sold</h5>
+            {% if recent_sold_listings %}
+              <ul class="s-text8">
+                {% for l in recent_sold_listings %}
+                  <li style="margin-bottom: 5px;">
+                    {{ l.item.title }} ({{ l.condition }}) - Sold: <b>${{ l.price }}</b> - <span style="color: #888;">{{ l.created_at|date:"M d, Y" }}</span>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p class="s-text8">No sold listings yet.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="p-b-20" style="margin-top:20px;">
+        <h5 class="m-text19 p-b-10" style="border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px;">All Listings</h5>
+
+        {% if listings %}
+          <div class="row">
+            {% for l in listings %}
+              <div class="col-md-6 p-b-15">
+                <div class="bgwhite" style="border:1px solid #eee; padding:15px; border-radius:6px;">
+                  {% if l.video %}
+                      <video controls style="max-width: 100%; height: auto; margin-bottom: 10px; border-radius: 6px;">
+                          <source src="{{ l.video.url }}" type="video/mp4">
+                      </video>
+                  {% elif l.image %}
+                      <img src="{{ l.image.url }}" alt="Used item photo" style="max-width: 100%; height: auto; margin-bottom: 10px; border-radius: 6px;" />
+                  {% endif %}
+                  <div class="s-text8" style="font-size: 15px;"><b>{{ l.item.title }}</b></div>
+                  <div class="s-text8" style="margin-top: 5px;">Condition: <b>{{ l.condition }}</b></div>
+                  {% if l.is_donation %}
+                    <div class="s-text8">Price: <b style="color: #2e7d32;">Free (Donated)</b></div>
+                  {% else %}
+                    <div class="s-text8">Price: <b>${{ l.price }}</b></div>
+                  {% endif %}
+                  <div class="s-text8">Status: <b>{% if l.is_active %}Active{% else %}Sold/Inactive{% endif %}</b></div>
+                  <div class="s-text8">Created at: <span style="color: #888;">{{ l.created_at|date:"M d, Y" }}</span></div>
+                  {% if l.is_active %}
+                    <div class="s-text8 p-t-5" style="color: green; font-weight: 500;">Buyers can purchase this listing.</div>
+                  {% else %}
+                    <div class="s-text8 p-t-5" style="color: red; font-weight: 500;">This listing is no longer available.</div>
+                  {% endif %}
+                  {% if l.suggest_donation and not l.is_donation and l.is_active %}
+                    <div class="s-text8 p-t-5 p-b-5" style="background-color: #e8f5e9; padding: 10px; border-radius: 4px; border-left: 3px solid #2e7d32; margin-top: 8px; font-size: 12px; line-height: 1.4;">
+                      <span style="color: #2e7d32; font-weight: bold;">🌱 Eco Suggestion:</span> 
+                      This item was classified as a <b>{{ l.donation_reason }}</b>. 
+                      Would you consider donating it to a local charity/library?
+                      <div class="p-t-5">
+                        <a href="{% url 'core:mark-as-donation' l.pk %}" class="btn btn-sm btn-success" style="font-size: 11px; padding: 3px 8px; font-weight: 600;">Donate This Item (List for Free)</a>
+                      </div>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="s-text8">No listings yet. Use the form on the left to list a used/unused item for sale.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -1,11 +1,21 @@
 import os
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    # python-dotenv might not be installed; env vars can still be provided by the shell
+    pass
+
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
+
 
 DEBUG = True
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv('SECRET_KEY', 'dev-secret-key')
-ALLOWED_HOSTS = []
+# If you set SECRET_KEY in your environment, Django will use it.
+# (Some login errors happen when SESSION/CSRF secrets differ.)
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.localhost', 'example.com', '*']
 
 
 INSTALLED_APPS = [
@@ -97,24 +107,32 @@ AUTHENTICATION_BACKENDS = (
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
 
+# allauth account signup/login behavior (no email verification)
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_SIGNUP_REDIRECT_URL = '/'
+
+
+
 # Provider specific settings
+# NOTE: This project uses the allauth database-backed SocialApp configuration.
+# To avoid duplicate provider entries (and `MultipleObjectsReturned`), we don't
+# configure the provider via `SOCIALACCOUNT_PROVIDERS['google']['APP']` here.
+# Configure exactly ONE SocialApp for `google` in the Django admin instead.
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        # For each OAuth based provider, either add a ``SocialApp``
-        # (``socialaccount`` app) containing the required client
-        # credentials, or list them here:
-        'APP': {
-            'client_id': '123',
-            'secret': '456',
-            'key': '666'
-        }
     }
 }
 
-# CRISPY FORM
+
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY", "")
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "")
+
+# Centralized API Keys
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
 

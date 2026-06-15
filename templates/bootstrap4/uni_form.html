@@ -1,0 +1,10 @@
+{# Minimal fallback template for django-crispy-forms bootstrap4 pack.
+   This project only needs it to render auth forms via crispy_forms_tags. #}
+{% load crispy_forms_field %}
+
+{% for field in form.hidden_fields %}{{ field }}{% endfor %}
+
+{% for field in form.visible_fields %}
+  {% include 'bootstrap4/field.html' with field=field %}
+{% endfor %}
+

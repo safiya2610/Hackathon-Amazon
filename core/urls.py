@@ -11,8 +11,18 @@ from .views import (
     PaymentView,
     AddCouponView,
     RequestRefundView,
-    CategoryView
+    CategoryView,
+    BuyerDashboardView,
+    SellerDashboardView,
+    remove_used_from_cart,
+    mark_as_donation,
+    DonationsView,
+    claim_donation,
+    NearbyProductsView,
+    UploadNearbyProductView,
+    buy_local_item,
 )
+
 
 app_name = 'core'
 
@@ -28,6 +38,15 @@ urlpatterns = [
     path('order-summary/', OrderSummaryView.as_view(), name='order-summary'),
     path('remove-item-from-cart/<slug>/', remove_single_item_from_cart,
          name='remove-single-item-from-cart'),
+    path('remove-used-from-cart/<int:pk>/', remove_used_from_cart, name='remove-used-from-cart'),
     path('payment/<payment_option>/', PaymentView.as_view(), name='payment'),
-    path('request-refund/', RequestRefundView.as_view(), name='request-refund')
+    path('request-refund/', RequestRefundView.as_view(), name='request-refund'),
+    path('buyer/', BuyerDashboardView.as_view(), name='buyer-dashboard'),
+    path('seller/', SellerDashboardView.as_view(), name='seller-dashboard'),
+    path('seller/mark-as-donation/<int:pk>/', mark_as_donation, name='mark-as-donation'),
+    path('donations/', DonationsView.as_view(), name='donations'),
+    path('donations/claim/<int:pk>/', claim_donation, name='claim-donation'),
+    path('nearby/', NearbyProductsView.as_view(), name='nearby-products'),
+    path('nearby/upload/', UploadNearbyProductView.as_view(), name='upload-nearby-product'),
+    path('nearby/buy/<int:pk>/', buy_local_item, name='buy-local-item'),
 ]

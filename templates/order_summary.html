@@ -21,33 +21,54 @@
           <tr>
             <th scope="row">{{ forloop.counter }}</th>
             <td>
-			<img src="{{ order_item.item.image.url }}" style="width: 130px;"> 
-            </td>
-            <td>{{ order_item.item.title }}</td>
-            <td>{{ order_item.item.price }}</td>
-            <td>
-            	<a href="{% url 'core:remove-single-item-from-cart' order_item.item.slug %}"><i class="fas fa-minus mr-3"></i></a>
-            	{{ order_item.quantity }}
-            	<a href="{% url 'core:add-to-cart' order_item.item.slug %}"><i class="fas fa-plus ml-3"></i></a>
+              {% if order_item.used_item_listing and order_item.used_item_listing.image %}
+                <img src="{{ order_item.used_item_listing.image.url }}" style="width: 130px;">
+              {% else %}
+                <img src="{{ order_item.item.image.url }}" style="width: 130px;">
+              {% endif %}
             </td>
             <td>
-              {% if order_item.item.discount_price %}
+              {{ order_item.item.title }}
+              {% if order_item.used_item_listing %}
+                <span class="badge badge-success">Used ({{ order_item.used_item_listing.condition }})</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if order_item.used_item_listing %}
+                ${{ order_item.used_item_listing.price }}
+              {% else %}
+                ${{ order_item.item.price }}
+              {% endif %}
+            </td>
+            <td>
+              {% if order_item.used_item_listing %}
+                {{ order_item.quantity }}
+              {% else %}
+                <a href="{% url 'core:remove-single-item-from-cart' order_item.item.slug %}"><i class="fas fa-minus mr-3"></i></a>
+                {{ order_item.quantity }}
+                <a href="{% url 'core:add-to-cart' order_item.item.slug %}"><i class="fas fa-plus ml-3"></i></a>
+              {% endif %}
+            </td>
+            <td>
+              {% if order_item.used_item_listing %}
+                ${{ order_item.get_total_item_price }}
+              {% elif order_item.item.discount_price %}
                   ${{ order_item.get_total_discount_item_price}}
                   <span class="badge badge-primary">  Saving ${{ order_item.get_amount_saved }}</span>
               {% else %}
                   ${{ order_item.get_total_item_price}}
               {% endif %}
-              <a style="color: red" href="{% url 'core:remove-from-cart' order_item.item.slug %}">
-              	<i class="fas fa-trash float-right"></i>
+              <a style="color: red" href="{% if order_item.used_item_listing %}{% url 'core:remove-used-from-cart' order_item.id %}{% else %}{% url 'core:remove-from-cart' order_item.item.slug %}{% endif %}">
+                <i class="fas fa-trash float-right"></i>
               </a>
             </td>
           </tr>
           {% empty %}
           <tr>
-			<td colspan="5">Your cart is empty</td>
+            <td colspan="6" class="text-center">Your cart is empty</td>
           </tr>
+          {% endfor %}
         </tbody>
-        {% endfor %}
         {% if object.coupon %}
         <tr>
           <td colspan="5"><b>Coupon : </b></td>
@@ -61,7 +82,7 @@
         </tr>
         <tr>
         	<td colspan="5">
-        		<a href="/checkout" class="btn btn-warning float-right ml-2">Checkout</a>
+        		<a href="/checkout" class="btn btn-warning float-right ml-2">Place Order (Checkout)</a>
         		<a href="/" class="btn btn-primary float-right">Continue Shopping</a>
 
         	</td>
