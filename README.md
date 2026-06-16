@@ -1,4 +1,5 @@
 # Amazon Recommerce 🌱
+<img width="1500" height="800" alt="image" src="https://github.com/user-attachments/assets/4d301e10-5420-4eb8-8298-2820f788e3a0" />
 
 An innovative e-commerce platform built for the **Amazon Hackathon**. Amazon Recommerce bridges the gap between traditional retail, sustainable second-hand shopping, and local community marketplaces. 
 
