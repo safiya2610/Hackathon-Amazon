@@ -7,33 +7,135 @@
 
 {% block content %}
 <style type="text/css">
-  input {
-
-    border: 1px solid #ced4da !important;
-
-}
+    .amz-login-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 40px;
+        margin-bottom: 60px;
+    }
+    .amz-login-logo {
+        font-size: 28px;
+        font-weight: 800;
+        margin-bottom: 20px;
+        color: #000;
+        text-decoration: none;
+    }
+    .amz-login-logo:hover {
+        color: #000;
+        text-decoration: none;
+    }
+    .amz-login-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 30px;
+        width: 100%;
+        max-width: 380px;
+        background-color: #fff;
+    }
+    .amz-login-card h1 {
+        font-size: 28px;
+        font-weight: 400;
+        margin-bottom: 20px;
+        line-height: 1.2;
+    }
+    .amz-login-card label {
+        font-weight: bold;
+        font-size: 13px;
+        margin-bottom: 5px;
+        display: block;
+    }
+    .amz-login-card input.textInput, .amz-login-card input.passwordField, .amz-login-card .form-control, .amz-login-card input.emailField {
+        border: 1px solid #a6a6a6 !important;
+        border-radius: 3px !important;
+        padding: 5px 10px;
+        height: auto;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset;
+        margin-bottom: 15px;
+    }
+    .amz-login-card input.textInput:focus, .amz-login-card input.passwordField:focus, .amz-login-card .form-control:focus, .amz-login-card input.emailField:focus {
+        border-color: #e77600 !important;
+        box-shadow: 0 0 3px 2px rgba(228,121,17,0.5) !important;
+        outline: none;
+    }
+    .amz-btn-sign-in {
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        font-size: 14px;
+        box-shadow: 0 2px 5px 0 rgba(213,217,217,.5);
+    }
+    .amz-legal-text {
+        font-size: 12px;
+        color: #111;
+        margin-bottom: 20px;
+        line-height: 1.5;
+    }
+    .amz-legal-text a {
+        color: #0066c0;
+        text-decoration: none;
+    }
+    .amz-legal-text a:hover {
+        text-decoration: underline;
+        color: #c45500;
+    }
+    .amz-divider {
+        position: relative;
+        text-align: center;
+        margin-top: 25px;
+        margin-bottom: 15px;
+        width: 100%;
+        max-width: 380px;
+    }
+    .amz-divider::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        border-top: 1px solid #e7e7e7;
+        z-index: 1;
+    }
+    .amz-divider span {
+        background: #fff;
+        padding: 0 10px;
+        color: #767676;
+        font-size: 12px;
+        position: relative;
+        z-index: 2;
+    }
+    /* Hide some crispy form default elements if needed */
+    .form-text.text-muted { display: none; }
+    .form-group { margin-bottom: 0; }
 </style>
 
+<div class="container amz-login-wrapper">
+    <a href="/" class="amz-login-logo">
+        <span id="login-logo-text">Amazon Recommerce</span>
+    </a>
+    
+    <div class="amz-login-card">
+        <h1>Create account</h1>
+        <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+            {% csrf_token %}
+            {{ form|crispy }}
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+            
+            <button class="amz-btn-yellow amz-btn-sign-in" type="submit" style="padding: 8px 10px;">{% trans "Continue" %}</button>
+            
+            <div class="amz-legal-text" style="margin-bottom: 0;">
+                By creating an account, you agree to Amazon's <a href="#">Conditions of Use</a> and <a href="#">Privacy Notice</a>.
+            </div>
+            
+            <hr style="margin: 20px 0;">
 
-<div class="container">
-  <div class="row">
-
-    <div class="col-md-6 mt-5 offset-3">
-    <h1>{% trans "Sign Up" %}</h1>
-
-<p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
-
-<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-  {% csrf_token %}
-  {{ form|crispy }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <button type="submit" class="btn btn-primary">{% trans "Sign Up" %} &raquo;</button>
-</form>
-
+            <div class="amz-legal-text" style="font-size: 13px;">
+                Already have an account? <a href="{{ login_url }}" style="text-decoration: none; font-weight: normal;">Sign in ►</a>
+            </div>
+        </form>
+    </div>
 </div>
-</div>
-</div>
-
 {% endblock %}
