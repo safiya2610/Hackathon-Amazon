@@ -1,86 +1,92 @@
-# Django-Ecommerce
+# Amazon Recommerce 🌱
 
-Ecommerce website built with Django 2.2.3, Python 3.7.3, and AWS
+An innovative e-commerce platform built for the **Amazon Hackathon**. Amazon Recommerce bridges the gap between traditional retail, sustainable second-hand shopping, and local community marketplaces. 
 
-![image](https://user-images.githubusercontent.com/29988949/65267147-499fc580-dac9-11e9-90e8-eccbc93c7c3a.png)
+Built with **Django**, this project aims to reduce carbon footprints by encouraging users to buy used items, resell locally, and donate intelligently with the power of AI.
 
-`Product Slide`
+## 🚀 Key Features
 
-![image](https://user-images.githubusercontent.com/29988949/65999313-ff67fe00-e451-11e9-9ed9-fc7bce704f17.png)
+* **Three-Tier Marketplace:** Buy and sell **New** products, **Used** items, and **Local** goods (with $0 delivery fees for neighbor-to-neighbor trades).
+* **AI-Powered Sustainability:** Integrates with the **Google Gemini API** (`gemini-1.5-flash`). When sellers upload an image of a used item, the AI analyzes it to detect if it's old clothing, books, or a heavily worn item, and gently prompts the seller to **donate it** instead of selling.
+* **Green Points System:** Buyers are rewarded with "Green Points" for choosing to buy used items instead of new ones, gamifying the sustainability experience.
+* **Modern UI/UX:** Features a sleek, responsive design mimicking premium e-commerce interfaces, including pure-CSS promotional banners, horizontal scrolling product carousels, and high-quality product cards.
+* **Fully Featured Cart & Checkout:** Includes user authentication, shopping carts, billing addresses, and order processing.
 
-`Shop Page`
-![image](https://user-images.githubusercontent.com/29988949/66098968-923f9000-e559-11e9-8691-cd5c2b181ca1.png)
+---
 
-`Product Detail Page`
-![image](https://user-images.githubusercontent.com/29988949/66291084-bff84200-e895-11e9-8d53-3aa23b29dbae.png)
+## 🛠️ Technology Stack
+* **Backend:** Python, Django
+* **Database:** SQLite (Default for development)
+* **Frontend:** HTML5, CSS3, Vanilla JavaScript, Bootstrap
+* **AI Integration:** Google Gemini API (Generative AI)
 
-`Cart Page`
-![image](https://user-images.githubusercontent.com/29988949/66291144-f0d87700-e895-11e9-8545-b8f93f799063.png)
+---
 
-`BillingAddress Page`
-![image](https://user-images.githubusercontent.com/29988949/66291542-013d2180-e897-11e9-8ea9-40afcb90cee2.png)
+## 💻 How to Run the Project Locally
 
-`Stripe Payment Page`
-![image](https://user-images.githubusercontent.com/29988949/66291610-29c51b80-e897-11e9-8b47-20de35d6c1d0.png)
+Follow these instructions to get your local development environment up and running.
 
-`Order Success Page`
-![image](https://user-images.githubusercontent.com/29988949/66291657-3e091880-e897-11e9-830b-6cf44e72a995.png)
-
-
-
-
-# Installation
-
-`git clone https://github.com/zinmyoswe/Django-Ecommerce.git`
-
-`cd Django-Ecommerce`
-
-`pip install virtualenv`
-
-`virtualenv env`
-
-# For Mac/ Linux
-
-`source env/bin/activate`
-
-# For Window
-
-`env\Scripts\activate`
-
-`pip install -r requirements.txt`
-
-Install below version in terminal and 'New Version will face version conflict error'
-
-```python
-
-pip install Django==2.2.4
-python -m pip install django-allauth==0.40.0
-pip install django-crispy-forms==1.7.2
-pip install django-countries==5.5
-pip install stripe==2.37.1
-pip install Pillow
-
+### 1. Clone the repository
+```bash
+git clone https://github.com/safiya2610/Hackathon-Amazon.git
+cd Hackathon-Amazon
 ```
 
-`python manage.py makemigrations`
+### 2. Set up a Virtual Environment
+It is highly recommended to use a virtual environment to manage dependencies.
+**For Windows:**
+```bash
+pip install virtualenv
+virtualenv env
+env\Scripts\activate
+```
+**For Mac/Linux:**
+```bash
+pip install virtualenv
+virtualenv env
+source env/bin/activate
+```
 
-`python manage.py migrate`
+### 3. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+*(Note: If you face version conflicts, ensure you are using the specific versions outlined in your requirements file, such as Django==2.2.4).*
 
-`python manage.py runserver`
+### 4. Set your Environment Variables
+You will need a Gemini API Key for the AI features to work.
+* Create a `.env` file in the root directory (where `manage.py` is).
+* Add your API key:
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
+```
 
-# For Admin Login
+### 5. Run Database Migrations
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
 
-```python
+### 6. Create a Superuser (Admin Account)
+```bash
 python manage.py createsuperuser
-Username : admin
-Password : 12345678
 ```
-# Demo
+Follow the prompts to set your admin username, email, and password.
 
-http://djangoecommerce.pythonanywhere.com
+### 7. Start the Development Server
+```bash
+python manage.py runserver
+```
 
-# HTML Template
+### 8. Access the Application
+Open your web browser and navigate to:
+* **Main Website:** [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+* **Admin Dashboard:** [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/) (Log in with the superuser account you created)
 
-https://colorlib.com/etc/fashe/index.html
+---
 
+## 🤝 Contributing
+Contributions are welcome! If you'd like to improve the project, please fork the repository and submit a pull request.
 
+## 📝 License
+This project was built for the Amazon Hackathon. All rights reserved by the respective creators.

@@ -5,24 +5,179 @@
 {% block content %}
 <style>
     .amz-hero {
-        background: linear-gradient(to bottom, #232f3e, #eaeded);
-        padding: 40px 20px;
-        text-align: center;
-        color: white;
-        height: 200px;
+        background: linear-gradient(135deg, #ffe28a, #f5a623);
+        padding: 50px 40px 100px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 30px;
     }
-    .amz-hero h2 {
+    .hero-text {
+        text-align: left;
+    }
+    .hero-text h2 {
+        font-size: 48px;
+        font-weight: 800;
+        color: #0033a0;
+        margin-bottom: 5px;
+        line-height: 1.1;
+    }
+    .hero-text p {
         font-size: 32px;
         font-weight: 700;
-        margin-bottom: 10px;
+        color: #0033a0;
+        margin: 0;
     }
+    .hero-ticket-wrapper {
+        filter: drop-shadow(0 5px 15px rgba(0,0,0,0.15));
+    }
+    .hero-ticket {
+        background: 
+            radial-gradient(circle at 0 50%, transparent 18px, #0047ba 19px),
+            radial-gradient(circle at 100% 50%, transparent 18px, #0047ba 19px);
+        background-position: left center, right center;
+        background-size: 51% 100%;
+        background-repeat: no-repeat;
+        color: white;
+        padding: 30px 60px;
+        text-align: center;
+        position: relative;
+    }
+    .hero-ticket-inner {
+        border: 2px dashed rgba(255,255,255,0.5);
+        padding: 15px 30px;
+        border-radius: 8px;
+    }
+    .hero-ticket h3 {
+        font-size: 42px;
+        font-weight: 800;
+        margin-bottom: 5px;
+        color: white;
+    }
+    .hero-ticket .subtext {
+        font-size: 22px;
+        margin-bottom: 15px;
+        font-weight: 500;
+        color: white;
+    }
+    .hero-ticket .applied-btn {
+        background: white;
+        color: #000;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 18px;
+        display: inline-block;
+    }
+    /* Icons simulating the right side items */
+    .hero-items {
+        display: flex;
+        gap: 20px;
+        font-size: 50px;
+        color: #e76f51;
+        align-items: center;
+    }
+    .hero-items i.fa-chair { color: #d4a373; }
+    .hero-items i.fa-shoe-prints { color: #457b9d; }
+    .hero-items i.fa-dumbbell { color: #1d3557; }
+
+    /* Carousel styles */
+    .amz-carousel-section {
+        background: white;
+        margin: -60px auto 20px auto;
+        max-width: 1400px;
+        padding: 20px 40px;
+        position: relative;
+        z-index: 10;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    .amz-carousel-section h3 {
+        font-size: 21px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: baseline;
+        gap: 15px;
+    }
+    .amz-carousel-section .see-more {
+        font-size: 14px;
+        color: #007185;
+        text-decoration: none;
+        font-weight: normal;
+    }
+    .amz-carousel-section .see-more:hover {
+        color: #c45500;
+        text-decoration: underline;
+    }
+    .amz-carousel-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    .amz-carousel {
+        display: flex;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        gap: 20px;
+        padding: 10px 0;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        width: 100%;
+    }
+    .amz-carousel::-webkit-scrollbar {
+        display: none;
+    }
+    .amz-carousel-item {
+        flex: 0 0 auto;
+        width: 200px;
+        height: 200px;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        padding: 10px;
+    }
+    .amz-carousel-item img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        transition: transform 0.2s;
+    }
+    .amz-carousel-item a:hover img {
+        transform: scale(1.05);
+    }
+    .carousel-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid #d5d9d9;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        width: 45px;
+        height: 100px;
+        cursor: pointer;
+        z-index: 2;
+        font-size: 24px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333;
+    }
+    .carousel-btn.prev-btn { left: -20px; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+    .carousel-btn.next-btn { right: -20px; border-top-right-radius: 0; border-bottom-right-radius: 0; }
+    .carousel-btn:hover { background: #f7fafa; }
+
+    /* Grid styles */
     .amz-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 20px;
         padding: 20px;
         max-width: 1400px;
-        margin: -80px auto 40px auto;
+        margin: 0 auto 40px auto;
         position: relative;
         z-index: 10;
     }
@@ -62,8 +217,51 @@
 </style>
 
 <div class="amz-hero">
-    <h2>Welcome to Amazon Recommerce</h2>
-    <p>Discover new, used, and locally resold items.</p>
+    <div class="hero-text">
+        <h2>Exclusive<br>coupon for you!</h2>
+    </div>
+    
+    <div class="hero-ticket-wrapper">
+        <div class="hero-ticket">
+            <div class="hero-ticket-inner">
+                <h3>Flat 10% Off</h3>
+                <div class="subtext">✦ Up to ₹100</div>
+                <div class="applied-btn">Already applied</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-items">
+        <i class="fa fa-chair" title="Furniture"></i>
+        <i class="fa fa-shoe-prints" title="Fashion"></i>
+        <i class="fa fa-dumbbell" title="Fitness"></i>
+    </div>
+</div>
+
+<!-- Carousel Section added to mimic Amazon homepage -->
+<div class="amz-carousel-section">
+    <h3>Up to 45% off | Top Deals on Products <a href="#" class="see-more">See all offers</a></h3>
+    <div class="amz-carousel-container">
+        <button class="carousel-btn prev-btn">&#10094;</button>
+        <div class="amz-carousel" id="deals-carousel">
+            {% for item in object_list %}
+            <div class="amz-carousel-item">
+                <a href="{{item.get_absolute_url}}">
+                    <img src="{{ item.image.url }}" alt="{{ item.title }}" title="{{ item.title }}">
+                </a>
+            </div>
+            {% endfor %}
+            <!-- Duplicate loop to ensure scrollability on demo sites -->
+            {% for item in object_list %}
+            <div class="amz-carousel-item">
+                <a href="{{item.get_absolute_url}}">
+                    <img src="{{ item.image.url }}" alt="{{ item.title }}" title="{{ item.title }}">
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-btn next-btn">&#10095;</button>
+    </div>
 </div>
 
 <div class="amz-grid">
@@ -87,5 +285,21 @@
     </div>
     {% endfor %}
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.getElementById('deals-carousel');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+
+    nextBtn.addEventListener('click', () => {
+        carousel.scrollBy({ left: 600, behavior: 'smooth' });
+    });
+
+    prevBtn.addEventListener('click', () => {
+        carousel.scrollBy({ left: -600, behavior: 'smooth' });
+    });
+});
+</script>
 
 {% endblock %}
