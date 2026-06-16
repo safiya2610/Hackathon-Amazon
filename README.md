@@ -4,7 +4,7 @@ An innovative e-commerce platform built for the **Amazon Hackathon**. Amazon Rec
 
 Built with **Django**, this project aims to reduce carbon footprints by encouraging users to buy used items, resell locally, and donate intelligently with the power of AI.
 
-## 🚀 Key Features
+##  Key Features
 
 * **Three-Tier Marketplace:** Buy and sell **New** products, **Used** items, and **Local** goods (with $0 delivery fees for neighbor-to-neighbor trades).
 * **AI-Powered Sustainability:** Integrates with the **Google Gemini API** (`gemini-1.5-flash`). When sellers upload an image of a used item, the AI analyzes it to detect if it's old clothing, books, or a heavily worn item, and gently prompts the seller to **donate it** instead of selling.
@@ -14,7 +14,7 @@ Built with **Django**, this project aims to reduce carbon footprints by encourag
 
 ---
 
-## 🛠️ Technology Stack
+##  Technology Stack
 * **Backend:** Python, Django
 * **Database:** SQLite (Default for development)
 * **Frontend:** HTML5, CSS3, Vanilla JavaScript, Bootstrap
@@ -22,7 +22,7 @@ Built with **Django**, this project aims to reduce carbon footprints by encourag
 
 ---
 
-## 💻 How to Run the Project Locally
+##  How to Run the Project Locally
 
 Follow these instructions to get your local development environment up and running.
 
@@ -85,8 +85,4 @@ Open your web browser and navigate to:
 
 ---
 
-## 🤝 Contributing
-Contributions are welcome! If you'd like to improve the project, please fork the repository and submit a pull request.
 
-## 📝 License
-This project was built for the Amazon Hackathon. All rights reserved by the respective creators.
