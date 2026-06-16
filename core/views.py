@@ -235,7 +235,7 @@ class ItemDetailView(DetailView):
                         import requests
                         from django.conf import settings
                         API_KEY = settings.GEMINI_API_KEY
-                        gemini_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={API_KEY}"
+                        gemini_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API_KEY}"
                         
                         reviews_text = "\n".join([f"- {r.content}" for r in reviews])
                         prompt = f"""
@@ -552,7 +552,7 @@ class SellerDashboardView(LoginRequiredMixin, View):
                 def detect_donation_suggestion(image_file):
                     from django.conf import settings
                     api_key = settings.GEMINI_API_KEY
-                    models = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]
+                    models = ["gemini-1.5-flash"]
                     
                     try:
                         image_file.seek(0)
